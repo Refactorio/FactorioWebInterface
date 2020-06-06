@@ -24,6 +24,7 @@ jobs:
       with:
         node-version: '12.x'
     - name: Install dependencies
+      working-directory: ./FactorioWebInterface
       run: npm install
     - name: Build
       run: dotnet build --configuration Release --no-restore
