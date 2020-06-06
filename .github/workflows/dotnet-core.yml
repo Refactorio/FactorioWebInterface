@@ -1,4 +1,4 @@
-name: .NET Core
+name: CI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build: 
-    name: Build   
+    name: Build and Test
 
     runs-on: windows-latest
 
@@ -29,14 +29,5 @@ jobs:
       run: npm install
     - name: Build
       run: dotnet build --configuration Release --no-restore   
-      
-  test:
-    name: Test
-    
-    runs-on: windows-latest
-    
-    needs: build
-    
-    steps:
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --no-restore --verbosity normal  
