@@ -157,7 +157,7 @@ namespace FactorioWebInterface.Pages.Admin
             await _signInManager.SignInAsync(user, isPersistent: false);
             _logger.LogInformation($"User {user.UserName} signed in using discord.");
 
-            string returnUrl = HttpContext.Session.GetString("returnUrl") ?? "Servers";
+            string returnUrl = HttpContext.Session.GetString("returnUrl") ?? "servers";
             return Redirect(returnUrl);
         }
 
