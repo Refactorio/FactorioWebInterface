@@ -4,7 +4,7 @@ const TerserJSPlugin = require('terser-webpack-plugin');
 //const HtmlWebpackPlugin = require("html-webpack-plugin");
 //const CleanWebpackPlugin = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const RemovePlugin = require('remove-files-webpack-plugin');
 const glob = require('glob');
 
@@ -83,7 +83,7 @@ module.exports = (env, argv) => {
             })
         ],
         optimization: {
-            minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+            minimizer: [new TerserJSPlugin({}), new CssMinimizerPlugin()],
         },
         stats: 'errors-only',
         devtool: isDev ? "source-map" : undefined
