@@ -299,8 +299,8 @@ namespace FactorioWebInterfaceTests.Services.Discord.MessageQueueTests
         private static IMessageChannel MakeChannel(Action<string, Embed> callback)
         {
             var channel = new Mock<IMessageChannel>(MockBehavior.Strict);
-            channel.Setup(x => x.SendMessageAsync(It.IsAny<string>(), false, It.IsAny<Embed>(), null, It.IsAny<AllowedMentions>(), It.IsAny<MessageReference>(), It.IsAny<MessageComponent>(), It.IsAny<ISticker[]>(), It.IsAny<Embed[]>()))
-                .Returns((string text, bool _, Embed embed, RequestOptions __, AllowedMentions ____, MessageReference _____, MessageComponent ______, ISticker[] _______, Embed[] ________) =>
+            channel.Setup(x => x.SendMessageAsync(It.IsAny<string>(), false, It.IsAny<Embed>(), null, It.IsAny<AllowedMentions>(), It.IsAny<MessageReference>(), It.IsAny<MessageComponent>(), It.IsAny<ISticker[]>(), It.IsAny<Embed[]>(), It.IsAny<MessageFlags>(), It.IsAny<PollProperties>()))
+                .Returns((string text, bool _, Embed embed, RequestOptions __, AllowedMentions ____, MessageReference _____, MessageComponent ______, ISticker[] _______, Embed[] ________, MessageFlags _________, PollProperties __________) =>
                 {
                     callback(text, embed);
                     return Task.FromResult((IUserMessage?)null);
