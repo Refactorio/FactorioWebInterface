@@ -18,6 +18,8 @@ namespace FactorioWebInterface
         public const string FactorioWrapperClaim = "FactorioWrapper";
         public const string ServerSettingsUsernameKey = "serverSettingsUsername";
         public const string ServerSettingsTokenKey = "serverSettingsToken";
+        public const string ServerCountNameKey = "ServerCount";
+        public const string DefaultServerNameKey = "DefaultServer";
         public const string FactorioWrapperNameKey = "FactorioWrapperNameKey";
         public const string ScenarioTemplatesDirectoryNameKey = "ScenarioTemplatesDirectoryName";
         public const string ScenarioDownloadUrlKey = "ScenarioDownloadUrl";

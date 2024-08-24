@@ -9,6 +9,7 @@ import { ErrorService } from "../../services/errorService";
 import { ObservableObject } from "../../utils/observableObject";
 import { FileHelper } from "../../utils/fileHelper";
 import { CollectionView, ObservableKeyArray } from "../../utils/collections/module";
+import { ServerIdService } from "./serverIdService";
 
 export interface Destination {
     path: string;
@@ -182,6 +183,7 @@ export class ServerFileManagementViewModel extends ObservableObject {
     }
 
     constructor(
+        serverIdService: ServerIdService,
         serverFileManagementService: ServerFileManagementService,
         fileSelectionService: FileSelectionService,
         errorService: ErrorService,
@@ -202,7 +204,8 @@ export class ServerFileManagementViewModel extends ObservableObject {
 
         this._destinations.add({ path: 'global_saves', name: 'Global' });
 
-        for (let i = 1; i <= 10; i++) {
+        const serverCount = serverIdService.serverIds.count;
+        for (let i = 1; i <= serverCount; i++) {
             let destination: Destination = { path: `${i}/local_saves`, name: `Local ${i}` };
             this._destinations.add(destination);
         }
