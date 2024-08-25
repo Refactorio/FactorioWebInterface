@@ -348,7 +348,9 @@ namespace FactorioWebInterface.Services
                 return;
             }
 
-            string name = SanitizeDiscordChat(eventArgs.User.Username);
+            IUser user = eventArgs.User;
+            string userName = user is IGuildUser guildUser ? guildUser.DisplayName : user.Username;
+            string name = SanitizeDiscordChat(userName);
             string message = SanitizeDiscordChat(eventArgs.Message);
             string data = $"/silent-command game.print('[Discord] {name}: {message}')";
 
@@ -356,7 +358,7 @@ namespace FactorioWebInterface.Services
 
             _ = serverData.LockAsync(md =>
             {
-                FactorioServerUtils.SendDiscordMessage(md, _factorioControlHub, $"[Discord] {eventArgs.User.Username}: {eventArgs.Message}");
+                FactorioServerUtils.SendDiscordMessage(md, _factorioControlHub, $"[Discord] {userName}: {eventArgs.Message}");
 
                 if (md.ServerExtraSettings.DiscordToGameChat)
                 {
