@@ -1,7 +1,7 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
 using static FactorioWebInterface.Services.Discord.DiscordBotCommands;
 
 namespace FactorioWebInterface.Services.Discord
@@ -11,7 +11,15 @@ namespace FactorioWebInterface.Services.Discord
         public static IServiceCollection AddDiscord(this IServiceCollection services)
         {
             return services
-                .AddSingleton<DiscordSocketClient>()
+                .AddSingleton<DiscordSocketClient>(_ => new DiscordSocketClient(
+                    new DiscordSocketConfig()
+                    {
+                        GatewayIntents =
+                            GatewayIntents.AllUnprivileged |
+                            GatewayIntents.MessageContent |
+                            GatewayIntents.GuildMembers |
+                            GatewayIntents.GuildPresences
+                    }))
                 .AddSingleton<IDiscordClientWrapper, PhysicalDiscordClientWrapper>()
                 .AddSingleton<CommandService>()
                 .AddSingleton<IDiscordMessageHandlingService, DiscordMessageHandlingService>()
