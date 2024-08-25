@@ -18,6 +18,7 @@ namespace FactorioWebInterface.Services
         string UpdateCacheDirectoryPath { get; }
         string ModsDirectoryPath { get; }
         int ServerCount { get; }
+        int DefaultServer { get; }
         int BufferSize { get; }
         int MaxLogFiles { get; }
         string FactorioWrapperPath { get; }
@@ -47,6 +48,7 @@ namespace FactorioWebInterface.Services
         public string UpdateCacheDirectoryPath { get; }
         public string ModsDirectoryPath { get; }
         public int ServerCount { get; }
+        public int DefaultServer { get; }
         public int BufferSize { get; }
         public int MaxLogFiles { get; }
         public string FactorioWrapperPath { get; }
@@ -65,6 +67,7 @@ namespace FactorioWebInterface.Services
             ModsDirectoryPath = Path.GetFullPath(Path.Combine(BaseDirectoryPath, Constants.ModsDirectoryName));
 
             ServerCount = factorioServerDataConfiguration.ServerCount;
+            DefaultServer = factorioServerDataConfiguration.DefaultServer;
             BufferSize = factorioServerDataConfiguration.BufferSize;
             MaxLogFiles = factorioServerDataConfiguration.MaxLogFiles;
 

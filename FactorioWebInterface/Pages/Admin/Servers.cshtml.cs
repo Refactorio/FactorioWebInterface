@@ -18,6 +18,7 @@ namespace FactorioWebInterface.Pages.Admin
         private readonly ILogger<ServersModel> _logger;
 
         public int ServerCount => _factorioServerDataService.ServerCount;
+        public int DefaultServer => _factorioServerDataService.DefaultServer;
 
         public ServersModel(UserManager<ApplicationUser> userManger,
             IFactorioFileManager factorioFileManager,
@@ -34,13 +35,13 @@ namespace FactorioWebInterface.Pages.Admin
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            Id = id ?? 1;
+            Id = id ?? DefaultServer;
 
             var user = await _userManger.GetUserAsync(User);
 
             if (Id < 1 || Id > _factorioServerDataService.ServerCount)
             {
-                return RedirectToPage("Servers", 1);
+                return RedirectToPage("Servers", DefaultServer);
             }
 
             if (user == null || user.Suspended)

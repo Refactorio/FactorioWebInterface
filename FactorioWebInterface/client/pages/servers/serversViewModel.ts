@@ -70,6 +70,7 @@ export class ServersViewModel {
             this.scenariosViewModel);
 
         this.serverFileManagementViewModel = new ServerFileManagementViewModel(
+            serverIdService,
             serverFileManagementService,
             fileSelectionService,
             errorService,
