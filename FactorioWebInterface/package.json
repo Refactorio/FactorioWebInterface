@@ -32,10 +32,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@microsoft/signalr": "^6.0.1",
-    "@microsoft/signalr-protocol-msgpack": "^6.0.1",
+    "@microsoft/signalr": "^8.0.7",
+    "@microsoft/signalr-protocol-msgpack": "^8.0.7",
     "@types/jquery": "^3.5.11",
-    "@types/node": "^16.11.17",
+    "@types/node": "^20.15.0",
     "bulma": "0.8.0",
     "deep-equal": "^2.0.5"
   },

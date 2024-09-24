@@ -214,7 +214,7 @@
     <None Remove="client\components\hideableContent.ts" />
     <None Remove="client\components\inputFieldBase.ts" />
     <None Remove="client\components\numberField.ts" />
-    <None Remove="client\components\textAreaField.ts" />
+    <None Remove="client\components\textareaField.ts" />
     <None Remove="client\components\textField.ts" />
     <None Remove="client\components\virtualComponent.ts" />
     <None Remove="client\components\virtualForm.ts" />
