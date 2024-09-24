@@ -19,7 +19,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -42,7 +42,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -66,7 +66,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -91,7 +91,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -120,7 +120,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -149,7 +149,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -179,7 +179,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -206,7 +206,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -236,7 +236,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -267,7 +267,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -301,7 +301,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -339,7 +339,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -370,7 +370,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
             using Stream stream = FileHelper.StreamFromZipFiles(files);
 
             var fileSystem = new MockFileSystem();
-            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+            IDirectoryInfo scenarioDirectory = fileSystem.DirectoryInfo.New("/scenarios");
 
             // Act.
             ScenarioBuilder.BuildFromTemplates(stream, "scenario_templates", scenarioDirectory);
@@ -398,7 +398,7 @@ namespace FactorioWebInterfaceTests.Models.CodeDeflateTests
 
         private static void AssertNoExtraFiles(IFileSystem fileSystem, string searchDirectory, Dictionary<string, string> expectedFiles)
         {
-            IDirectoryInfo diretory = fileSystem.DirectoryInfo.FromDirectoryName(searchDirectory);
+            IDirectoryInfo diretory = fileSystem.DirectoryInfo.New(searchDirectory);
 
             IEnumerable<string> foundFiles;
             if (diretory.Exists)

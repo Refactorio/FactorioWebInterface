@@ -170,7 +170,7 @@ namespace FactorioWebInterface.Services
 
         public IDirectoryInfo GetScenariosDirectory()
         {
-            var dir = _fileSystem.DirectoryInfo.FromDirectoryName(_factorioServerDataService.ScenarioDirectoryPath);
+            var dir = _fileSystem.DirectoryInfo.New(_factorioServerDataService.ScenarioDirectoryPath);
             if (!dir.Exists)
             {
                 dir.Create();
@@ -421,7 +421,7 @@ namespace FactorioWebInterface.Services
 
             try
             {
-                IFileInfo fi = _fileSystem.FileInfo.FromFileName(path);
+                IFileInfo fi = _fileSystem.FileInfo.New(path);
                 if (fi.Exists)
                 {
                     return fi;

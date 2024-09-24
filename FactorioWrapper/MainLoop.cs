@@ -457,7 +457,7 @@ namespace FactorioWrapper
 
                     string line = match.Groups[1].Value;
 #if WINDOWS
-                    if (line == "Info UDPSocket.cpp:39: Opening socket for broadcast")
+                    if (line == "Info UDPSocket.cpp:45: Opening socket for broadcast")
                     {
                         await ConnectRCON();
 

@@ -73,9 +73,9 @@ namespace FactorioWebInterface
                 {
                     serverOptions.Limits.MaxRequestBodySize = 1073741824; // 1GB.
                 })
-                .UseStartup<Startup>()
-                .UseSerilog();
-            });
+                .UseStartup<Startup>();
+            })
+            .UseSerilog();
 
         private static async Task SeedData(IHost host)
         {
