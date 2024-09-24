@@ -72,9 +72,9 @@ namespace FactorioWebInterface.Services
             MaxLogFiles = factorioServerDataConfiguration.MaxLogFiles;
 
 #if WINDOWS
-            FactorioWrapperPath = "C:/Projects/FactorioWebInterface/FactorioWrapper/bin/Windows/net6.0/FactorioWrapper.exe";
+            FactorioWrapperPath = "C:/dev/FactorioWebInterface/FactorioWrapper/bin/Windows/net8.0/FactorioWrapper.exe";
 #elif WSL
-            FactorioWrapperPath = "/mnt/c/Projects/FactorioWebInterface/FactorioWrapper/bin/Wsl/net6.0/publish/FactorioWrapper";
+            FactorioWrapperPath = "/mnt/c/dev/FactorioWebInterface/FactorioWrapper/bin/Wsl/net8.0/publish/FactorioWrapper";
 #else
             FactorioWrapperPath = $"/factorio/{factorioServerDataConfiguration.FactorioWrapperName}/FactorioWrapper";
 #endif

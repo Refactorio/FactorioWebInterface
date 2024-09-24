@@ -10,7 +10,7 @@ namespace FactorioWebInterface.Utils
         {
             try
             {
-                var dir = fileSystem.DirectoryInfo.FromDirectoryName(path);
+                var dir = fileSystem.DirectoryInfo.New(path);
                 if (dir.Exists)
                 {
                     dir.Delete(recursive: true);
@@ -28,7 +28,7 @@ namespace FactorioWebInterface.Utils
         {
             try
             {
-                IFileInfo fi = fileSystem.FileInfo.FromFileName(filePath);
+                IFileInfo fi = fileSystem.FileInfo.New(filePath);
                 fi.Directory.Create();
 
                 return fileSystem.File.WriteAllBytesAsync(fi.FullName, bytes);

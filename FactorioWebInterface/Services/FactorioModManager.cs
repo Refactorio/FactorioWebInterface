@@ -116,7 +116,7 @@ namespace FactorioWebInterface.Services
 
                 string safeName = Path.GetFileName(modPack);
                 string modPackPath = Path.Combine(dir.FullName, safeName);
-                var modPackDir = _fileSystem.DirectoryInfo.FromDirectoryName(modPackPath);
+                var modPackDir = _fileSystem.DirectoryInfo.New(modPackPath);
 
                 if (!modPackDir.Exists)
                 {

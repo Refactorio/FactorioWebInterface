@@ -9,7 +9,7 @@ namespace FactorioWebInterface.Utils
         {
             try
             {
-                IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(targetFilePath);
+                IFileInfo fileInfo = fileSystem.FileInfo.New(targetFilePath);
                 fileInfo.Directory.Create();
 
                 using var fileStream = fileInfo.Open(System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write);

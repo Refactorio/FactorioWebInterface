@@ -90,7 +90,7 @@ namespace FactorioWebInterfaceTests.Services.UpdateScenarioServiceTests
 
             if (shouldGetScenarioDirectory)
             {
-                var di = fileSystem.DirectoryInfo.FromDirectoryName("/scenarios");
+                var di = fileSystem.DirectoryInfo.New("/scenarios");
                 fileManager.Setup(x => x.GetScenariosDirectory())
                     .Returns(di)
                     .Verifiable();
