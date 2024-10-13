@@ -237,8 +237,6 @@ namespace FactorioWebInterface.Services
 
                 string basePath = serverData.BaseDirectoryPath;
                 var extractDirectoryPath = Path.Combine(basePath, "factorio");
-                var binDirectoryPath = Path.Combine(basePath, "bin");
-                var dataDirectoryPath = Path.Combine(basePath, "data");
 
                 var extractDirectory = new DirectoryInfo(extractDirectoryPath);
                 if (extractDirectory.Exists)
@@ -247,22 +245,21 @@ namespace FactorioWebInterface.Services
                 }
 
                 bool success = await ProcessHelper.RunProcessToEndAsync("/bin/tar", $"-xJf {binaries.FullName} -C {basePath}");
-
-                var binDirectory = new DirectoryInfo(binDirectoryPath);
-                if (binDirectory.Exists)
-                {
-                    binDirectory.Delete(true);
-                }
-                var dataDirectory = new DirectoryInfo(dataDirectoryPath);
-                if (dataDirectory.Exists)
-                {
-                    dataDirectory.Delete(true);
-                }
-
                 if (success)
                 {
-                    Directory.Move(Path.Combine(extractDirectoryPath, "bin"), binDirectoryPath);
-                    Directory.Move(Path.Combine(extractDirectoryPath, "data"), dataDirectoryPath);
+                    extractDirectory.Refresh();
+                    var subDirectories = extractDirectory.EnumerateDirectories();
+                    foreach (var subDirectory in subDirectories)
+                    {
+                        string targetPath = Path.Combine(basePath, subDirectory.Name);
+                        var targetDirectory = new DirectoryInfo(targetPath);
+                        if (targetDirectory.Exists)
+                        {
+                            targetDirectory.Delete(true);
+                        }
+
+                        subDirectory.MoveTo(targetDirectory.FullName);
+                    }
 
                     var configFile = new FileInfo(Path.Combine(basePath, "config-path.cfg"));
                     if (!configFile.Exists)
