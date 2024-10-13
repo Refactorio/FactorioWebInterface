@@ -88,10 +88,9 @@ namespace FactorioWebInterface.Services.Discord
 
         public async Task Init()
         {
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
-
                 using (var context = _dbContextFactory.Create<ApplicationDbContext>())
                 {
                     var servers = context.DiscordServers.AsQueryable().ToArrayAsync();
@@ -173,10 +172,9 @@ namespace FactorioWebInterface.Services.Discord
                 return Result.Failure(Constants.InvalidNameErrorKey, "Channel name can not be empty or whitespace or contain space ' ' characters.");
             }
 
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
-
                 using (var context = _dbContextFactory.Create<ApplicationDbContext>())
                 {
                     NamedDiscordChannel[] query = await context.NamedDiscordChannels.AsQueryable().Where(x => x.Name == name).ToArrayAsync();
@@ -217,10 +215,9 @@ namespace FactorioWebInterface.Services.Discord
 
         public async Task<Result> UnSetNamedChannel(string name)
         {
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
-
                 using (var context = _dbContextFactory.Create<ApplicationDbContext>())
                 {
                     NamedDiscordChannel[] query = await context.NamedDiscordChannels.AsQueryable().Where(x => x.Name == name).ToArrayAsync();
@@ -256,10 +253,9 @@ namespace FactorioWebInterface.Services.Discord
 
         public async Task<Result<string?>> UnSetServer(ulong channelId)
         {
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
-
                 using (var context = _dbContextFactory.Create<ApplicationDbContext>())
                 {
                     DiscordServers[] query = await context.DiscordServers.AsQueryable().Where(x => x.DiscordChannelId == channelId).ToArrayAsync();
@@ -322,10 +318,9 @@ namespace FactorioWebInterface.Services.Discord
 
         public async Task<Result<(string name, ulong channel)[]>> GetNamedChannels()
         {
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
-
                 var array = nameToDiscord.Select(x => (x.Key, x.Value)).ToArray();
                 return Result<(string name, ulong channel)[]>.OK(array);
             }
@@ -353,10 +348,9 @@ namespace FactorioWebInterface.Services.Discord
 
         private async Task<Result> SetServerInner(string serverId, ulong channelId)
         {
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
-
                 using (var context = _dbContextFactory.Create<ApplicationDbContext>())
                 {
                     DiscordServers[] query = await context.DiscordServers.AsQueryable().Where(x => x.DiscordChannelId == channelId || x.ServerId == serverId).ToArrayAsync();
@@ -401,9 +395,9 @@ namespace FactorioWebInterface.Services.Discord
                 return null;
             }
 
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
                 if (!serverdToDiscord.TryGetValue(serverId, out ulong channelId))
                 {
                     return null;
@@ -424,9 +418,9 @@ namespace FactorioWebInterface.Services.Discord
                 return null;
             }
 
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
                 if (!nameToDiscord.TryGetValue(channelName, out ulong channelId))
                 {
                     return null;
@@ -474,9 +468,9 @@ namespace FactorioWebInterface.Services.Discord
                 return null;
             }
 
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
                 if (!serverdToDiscord.TryGetValue(serverId, out ulong channelId))
                 {
                     return null;
@@ -500,10 +494,9 @@ namespace FactorioWebInterface.Services.Discord
         private async void MessageReceived(IDiscordMessageHandlingService sender, MessageReceivedEventArgs eventArgs)
         {
             string serverId;
+            await discordLock.WaitAsync();
             try
             {
-                await discordLock.WaitAsync();
-
                 if (!discordToServer.TryGetValue(eventArgs.Channel.Id, out string? id))
                 {
                     return;

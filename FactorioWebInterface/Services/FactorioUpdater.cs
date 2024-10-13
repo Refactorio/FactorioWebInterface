@@ -175,10 +175,9 @@ namespace FactorioWebInterface.Services
 
         public async Task<FileInfo?> Download(string version)
         {
+            await downloadLock.WaitAsync();
             try
             {
-                await downloadLock.WaitAsync();
-
                 var cache = new DirectoryInfo(_factorioServerDataService.UpdateCacheDirectoryPath);
                 if (!cache.Exists)
                 {

@@ -243,10 +243,9 @@ namespace FactorioWrapper
 
         private async Task SendToFactorio(string data)
         {
+            await factorioProcessLock.WaitAsync();
             try
             {
-                await factorioProcessLock.WaitAsync();
-
                 var p = factorioProcess;
                 if (p != null && !p.HasExited)
                 {
@@ -299,12 +298,14 @@ namespace FactorioWrapper
 
             connection.On(nameof(IFactorioProcessClientMethods.Stop), async () =>
             {
+                bool lockAquired = false;
                 try
                 {
                     exitClearMessageQueueCancelSource?.Cancel();
                     exitClearMessageQueueCancelSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
                     await factorioProcessLock.WaitAsync();
+                    lockAquired = true;
 
                     Log.Information("Stopping factorio server.");
 
@@ -326,7 +327,11 @@ namespace FactorioWrapper
                     // If an error is throw above the status wont be changed.
                     // This changes the status in case the factorio process hasn't started yet, to make sure it doesn't start.
                     status = FactorioServerStatus.Stopping;
-                    factorioProcessLock.Release();
+
+                    if (lockAquired)
+                    {
+                        factorioProcessLock.Release();
+                    }
                 }
             });
 
@@ -373,10 +378,9 @@ namespace FactorioWrapper
 
         private async Task StartFactorioProcess()
         {
+            await factorioProcessLock.WaitAsync();
             try
             {
-                await factorioProcessLock.WaitAsync();
-
                 // Check to see if the server has been requested to stop.
                 if (status != FactorioServerStatus.WrapperStarted)
                 {
@@ -431,8 +435,6 @@ namespace FactorioWrapper
                 factorioProcessLock.Release();
             }
         }
-
-
 
         private async void FactorioProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
