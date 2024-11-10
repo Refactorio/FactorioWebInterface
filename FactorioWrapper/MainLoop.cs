@@ -25,12 +25,7 @@ namespace FactorioWrapper
         private readonly Settings settings;
         private readonly string serverId;
         private readonly string factorioFileName;
-
-#if WINDOWS
         private string factorioArguments;
-#else
-        private readonly string factorioArguments;
-#endif
 
         // This is to stop multiple threads writing to the factorio process concurrently.
         private readonly SemaphoreSlim factorioProcessLock = new SemaphoreSlim(1, 1);
@@ -48,7 +43,6 @@ namespace FactorioWrapper
         private volatile FactorioServerStatus status = FactorioServerStatus.WrapperStarting;
         private readonly SingleConsumerQueue<Func<Task>> messageQueue;
 
-#if WINDOWS
         private volatile RconMessenger rcon;
         private int rconPort;
         private const string rconPassword = "no_one_will_guess_this_awesome_password.";
@@ -86,7 +80,6 @@ namespace FactorioWrapper
                 factorioProcessLock.Release();
             }
         }
-#endif
 
         public MainLoop(Settings settings, string serverId, string factorioFileName, string factorioArguments)
         {
@@ -95,9 +88,7 @@ namespace FactorioWrapper
             this.factorioFileName = factorioFileName;
             this.factorioArguments = factorioArguments;
 
-#if WINDOWS
             PrependRconArguments();
-#endif
 
             messageQueue = new SingleConsumerQueue<Func<Task>>(maxMessageQueueSize, async func =>
             {
