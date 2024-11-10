@@ -17,7 +17,7 @@ namespace FactorioWebInterface.Services
     public class FactorioUpdater
     {
         private static readonly Regex downloadRegex = new Regex(@"/download/archive/(\d+\.\d+\.\d+)", RegexOptions.Compiled);
-        private static readonly Regex versionRegex = new Regex(@"factorio_headless_x64_(\d+\.\d+\.\d+)", RegexOptions.Compiled);
+        private static readonly Regex versionRegex = new Regex(@"factorio.*?_(\d+\.\d+\.\d+)", RegexOptions.Compiled);
 
         private readonly SemaphoreSlim downloadLock = new SemaphoreSlim(1);
 
