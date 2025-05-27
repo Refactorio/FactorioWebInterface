@@ -119,6 +119,54 @@ namespace FactorioWebInterfaceTests.Services.FactorioBanServiceTests
             Assert.Equal(expected, message);
         }
 
+        [Theory]
+        [InlineData("name\n", "reason", "name", "reason")]
+        [InlineData("name\n\r", "reason", "name", "reason")]
+        [InlineData("name\r", "reason", "name", "reason")]
+        [InlineData("name\r\n", "reason", "name", "reason")]
+        [InlineData("name\n\n", "reason", "name", "reason")]
+        [InlineData("name", "reason", "name", "reason")]
+        [InlineData("name", "reason\n", "name", "reason ")]
+        [InlineData("name", "reason\n\r", "name", "reason ")]
+        [InlineData("name", "reason\r", "name", "reason ")]
+        [InlineData("name", "reason\r\n", "name", "reason ")]
+        [InlineData("name", "reason\n\n", "name", "reason ")]
+        [InlineData("name", "reason\nline2", "name", "reason line2")]
+        [InlineData("name", "reason\nline2\nline3", "name", "reason line2 line3")]        
+        public async Task ReplacesLineEndingsInUsernameAndReasonWithSpace(string username, string reason, string expectedName, string expectedReason)
+        {
+            // Arrange.
+            var ban = new Ban() { Username = username, Admin = "admin", Reason = reason };
+            const string serverId = "serverId";
+            const bool sync = true;
+
+            var eventRaised = new AsyncManualResetEvent();
+            FactorioBanEventArgs? eventArgs = null;
+            void FactorioBanService_BanChanged(IFactorioBanService sender, FactorioBanEventArgs ev)
+            {
+                eventArgs = ev;
+                eventRaised.Set();
+            }
+
+            factorioBanService.BanChanged += FactorioBanService_BanChanged;
+
+            // Act.
+            await factorioBanService.AddBan(ban, serverId, sync, "");
+            await eventRaised.WaitAsyncWithTimeout(5000);
+
+            // Assert.
+            Assert.NotNull(eventArgs);
+            Assert.Equal(serverId, eventArgs!.Source);
+            Assert.Equal(sync, eventArgs.SynchronizeWithServers);
+
+            var changeData = eventArgs.ChangeData;
+
+            Assert.Equal(CollectionChangeType.Add, changeData.Type);
+            Assert.Single(changeData.NewItems);
+            Assert.Equal(expectedName, changeData.NewItems[0].Username);
+            Assert.Equal(expectedReason, changeData.NewItems[0].Reason);
+        }
+
         [Fact]
         public async Task DoesNotAddDuplicateBan()
         {
