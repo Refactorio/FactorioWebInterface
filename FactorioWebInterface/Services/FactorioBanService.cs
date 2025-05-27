@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FactorioWebInterface.Services
@@ -26,8 +27,11 @@ namespace FactorioWebInterface.Services
         Task<Result> BuildBanList(string serverBanListPath);
     }
 
-    public class FactorioBanService : IFactorioBanService
+    public partial class FactorioBanService : IFactorioBanService
     {
+        [GeneratedRegex("(\n|\r)+")]
+        private static partial Regex LineEndingRegex();
+
         private static readonly JsonSerializerSettings banListSerializerSettings = new JsonSerializerSettings()
         {
             Formatting = Formatting.Indented,
@@ -124,6 +128,8 @@ namespace FactorioWebInterface.Services
         public async Task<bool> AddBan(Ban ban, string serverId, bool synchronizeWithServers, string? actor)
         {
             ban.Username = ban.Username.ToLowerInvariant();
+            ban.Username = LineEndingRegex().Replace(ban.Username, "");
+            ban.Reason = LineEndingRegex().Replace(ban.Reason ?? "", " ");
 
             bool added = await AddBanToDatabase(ban);
             if (added)
