@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Net;
 using FactorioWebInterface.Utils;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,8 +16,10 @@ namespace FactorioWebInterface.Services.Discord
 
     public sealed class ChannelUpdater : IChannelUpdater
     {
-        private static TimeSpan requestTimeout = TimeSpan.FromSeconds(10);
-        private static TimeSpan throttleTimeout = TimeSpan.FromMinutes(5);
+        private static TimeSpan requestTimeout = TimeSpan.FromSeconds(30);
+        // Discord rate limits channel updates to 2 per 10 minutes. Waiting 6 minutes keeps us at
+        // 2 per window with enough margin for clock skew and the request itself taking time.
+        private static TimeSpan throttleTimeout = TimeSpan.FromMinutes(6);
 
         private readonly IFactorioServerDataService _factorioServerDataService;
         private readonly ILogger<ChannelUpdater> _logger;
@@ -74,16 +77,29 @@ namespace FactorioWebInterface.Services.Discord
                 try
                 {
                     await DoUpdate();
-                    await _timeSystem.Delay(throttleTimeout);
                 }
                 catch (OperationCanceledException)
                 {
                     ScheduleUpdate();
                 }
+                catch (RateLimitedException ex)
+                {
+                    // Expected when we are near the channel update rate limit rather than a
+                    // fault, so log it as a warning.
+                    _logger.LogWarning(ex, nameof(QueueConsumer));
+                    ScheduleUpdate();
+                }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, nameof(QueueConsumer));
+                    ScheduleUpdate();
                 }
+
+                // Always throttle, on success and failure alike. Updates are only ever
+                // scheduled by server events, so a failure that did not reschedule above
+                // would leave the channel stale until the next one, and throttling here
+                // bounds those retries to one attempt per throttleTimeout.
+                await _timeSystem.Delay(throttleTimeout);
             }
         }
 
@@ -115,7 +131,9 @@ namespace FactorioWebInterface.Services.Discord
 
             var requestOptions = new RequestOptions()
             {
-                RetryMode = RetryMode.RetryRatelimit,
+                // Do our own rate limiting via throttleTimeout, the library waiting out and
+                // retrying rate limits itself just gets cancelled by requestTimeout.
+                RetryMode = RetryMode.AlwaysFail,
                 CancelToken = tokenSource.Token
             };
 

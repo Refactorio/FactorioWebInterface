@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Net;
 using FactorioWebInterface.Services;
 using FactorioWebInterface.Services.Discord;
 using FactorioWebInterface.Utils;
@@ -99,6 +100,107 @@ namespace FactorioWebInterfaceTests.Services.Discord.ChannelUpdaterTests
 
             // Assert.
             logger.AssertContainsLog(LogLevel.Error, expectedState, exception);
+
+            // A failed update reschedules itself, so stop the updater retrying for the
+            // rest of the test run now that the mocked delay does not throttle it.
+            channelUpdater.Dispose();
+        }
+
+        [Fact]
+        public async Task RateLimitedException_LogsWarning()
+        {
+            // Arrange.
+            string expectedState = "QueueConsumer";
+
+            var exception = new RateLimitedException(new Mock<IRequest>().Object);
+
+            var finishedLogging = new AsyncManualResetEvent();
+            var logger = new TestLogger<ChannelUpdater>((_, __) => finishedLogging.Set());
+
+            var channelUpdater = MakeChannelUpdater((_, __) => throw exception, logger: logger);
+
+            // Act.
+            channelUpdater.ScheduleUpdate();
+            await finishedLogging.WaitAsyncWithTimeout(5000);
+
+            // Assert.
+            logger.AssertContainsLog(LogLevel.Warning, expectedState, exception);
+
+            channelUpdater.Dispose();
+        }
+
+        [Fact]
+        public async Task RateLimitedException_ReSchedules()
+        {
+            // Arrange.
+            int count = 0;
+            string? name = null;
+            string? topic = null;
+            var modifyEvent = new AsyncManualResetEvent();
+
+            var channelUpdater = MakeChannelUpdater((n, t) =>
+            {
+                count++;
+
+                if (count == 1)
+                {
+                    throw new RateLimitedException(new Mock<IRequest>().Object);
+                }
+
+                name = n;
+                topic = t;
+                modifyEvent.Set();
+            });
+
+            // Act.
+            channelUpdater.ScheduleUpdate();
+            await modifyEvent.WaitAsyncWithTimeout(5000);
+
+            // Assert.
+            Assert.Equal(2, count);
+            Assert.NotNull(name);
+            Assert.NotNull(topic);
+        }
+
+        [Fact]
+        public async Task AfterException_WaitsBeforeNextModify()
+        {
+            // Arrange.
+            var timeoutEvent = new AsyncManualResetEvent();
+
+            var timeSystemMock = new Mock<ITimeSystem>(MockBehavior.Strict);
+            timeSystemMock.Setup(x => x.Delay(It.IsAny<TimeSpan>())).Returns((TimeSpan _) => timeoutEvent.WaitAsyncWithTimeout(5000));
+
+            int count = 0;
+            var firstModifyEvent = new AsyncManualResetEvent();
+            var secondModifyEvent = new AsyncManualResetEvent();
+
+            var channelUpdater = MakeChannelUpdater((_, __) =>
+            {
+                count++;
+
+                if (count == 1)
+                {
+                    firstModifyEvent.Set();
+                    throw new Exception();
+                }
+
+                secondModifyEvent.Set();
+            },
+            timeSystem: timeSystemMock.Object);
+
+            // Act.
+            channelUpdater.ScheduleUpdate();
+            await firstModifyEvent.WaitAsyncWithTimeout(5000);
+
+            await Task.Delay(20);
+            Assert.False(secondModifyEvent.IsSet);
+
+            timeoutEvent.Set();
+
+            // Assert.
+            await secondModifyEvent.WaitAsyncWithTimeout(5000);
+            Assert.Equal(2, count);
         }
 
         [Fact]
@@ -127,11 +229,10 @@ namespace FactorioWebInterfaceTests.Services.Discord.ChannelUpdaterTests
                 modifyEvent.Set();
             }, logger: logger);
 
+            // Act.
+            // The failed update reschedules itself, no second ScheduleUpdate needed.
             channelUpdater.ScheduleUpdate();
             await finishedLogging.WaitAsyncWithTimeout(5000);
-
-            // Act.
-            channelUpdater.ScheduleUpdate();
             await modifyEvent.WaitAsyncWithTimeout(5000);
 
             // Assert.
